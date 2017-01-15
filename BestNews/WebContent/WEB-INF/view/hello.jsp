@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-    hello,fuck 肏  ${username}
+    hello, ${username}
 </body>
 </html>
