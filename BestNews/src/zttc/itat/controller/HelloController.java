@@ -12,6 +12,6 @@ public class HelloController {
 	public String hello(String username, Model model){
 		System.out.println(username);
 		model.addAttribute("username",username);
-		return "hello";
+		return "user/hello.ftl";
 	}
 }
