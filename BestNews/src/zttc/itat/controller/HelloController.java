@@ -13,7 +13,8 @@ public class HelloController {
 	@RequestMapping({"/hello","/"})
 	public String hello(String username, Model model){
 		System.out.println(username);
-		logger.info("This is debug message.");  
+		logger.info("This is debug message.");
+		logger.info("This is debug message1.");
 		model.addAttribute("username",username);
 		return "user/hello.ftl";
 	}
