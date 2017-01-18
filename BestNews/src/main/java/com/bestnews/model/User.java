@@ -1,4 +1,4 @@
-package zttc.itat.model;
+package com.bestnews.model;
 
 public class User {
 	public User(){

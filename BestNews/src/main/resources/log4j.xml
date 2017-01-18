@@ -11,37 +11,37 @@
 	</appender>
 
 	<logger name="org.acegisecurity">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 
 	<logger name="org.apache">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 
 	<logger name="org.springframework">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 
 	<logger name="com.ibatis">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 	<logger name="java.sql">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 	<logger name="java.sql.ResultSet">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 
 	<logger name="org.quartz">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>
 
 	<logger name="org.directwebremoting">
-		<level value="DEBUG" />
+		<level value="ERROR" />
 	</logger>	
 
 	<root>
-		<level value="DEBUG" />
+		<level value="info" />
 		<appender-ref ref="CONSOLE" />
 	</root>
 

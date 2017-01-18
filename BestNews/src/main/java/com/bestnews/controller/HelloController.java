@@ -1,4 +1,4 @@
-package zttc.itat.controller;
+package com.bestnews.controller;
 
 
 import org.apache.log4j.Logger;
