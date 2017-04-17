@@ -93,4 +93,10 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="40960" />
     </bean>
+    <!-- 
+    <bean id="handlerExceptionResolver" class="com.chinay.frame.basic.exception.AnnotationHandlerMethodExceptionResolver">
+        <property name="defaultErrorView" value="global/globalError.ftl"/>
+        <property name="defaultErrorViewAjax" value="global/globalResultJson.ftl"/>
+    </bean>
+     -->
 </beans>	

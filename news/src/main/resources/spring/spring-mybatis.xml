@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+                        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+                        http://www.springframework.org/schema/context  
+                        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+                        http://www.springframework.org/schema/mvc  
+                        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+                        http://www.springframework.org/schema/tx
+      					http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+       					http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+	<!-- 自动扫描 -->
+	<context:component-scan
+		base-package="com.me.news,com.me.news.service" />
+
+	<bean id="dataSourceMain" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="${jdbc-main.driverClassName}" />
+		<property name="url" value="${jdbc-main.url}" />
+		<property name="username" value="${jdbc-main.username}" />
+		<property name="password" value="${jdbc-main.password}" />
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="${jdbc-main.initialSize}"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="${jdbc-main.minIdle}"></property>
+		<!-- 连接池最大数量 -->
+		<property name="maxActive" value="${jdbc-main.maxActive}"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="${jdbc-main.maxIdle}"></property>
+		<!-- 获取连接最大等待时间 -->
+		<property name="maxWait" value="${jdbc-main.maxWait}"></property>
+		<property name="defaultAutoCommit" value="${jdbc-main.defaultAutoCommit}"></property>
+		<property name="removeAbandoned" value="${jdbc-main.removeAbandoned}"></property>
+		<property name="removeAbandonedTimeout" value="${jdbc-main.removeAbandonedTimeout}"></property>
+
+		<!-- 申请连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnBorrow" value="false" />
+
+		<!-- 归还连接时执行validationQuery检测连接是否有效，配置为true会降低性能 -->
+		<property name="testOnReturn" value="false" />
+
+		<!-- 失效检查线程运行时间间隔，要小于MySQL的'wait_timeout'时间（如果小于等于0，不会启动检查线程）,本地为8小时，所以这里设置为7小时 -->
+		<property name="timeBetweenEvictionRunsMillis" value="25200" />
+
+		<!-- 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于 timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+		<property name="testWhileIdle" value="true" />
+
+		<!-- 用来检测连接是否有效的sql，要求是一个查询语句,如果validationQuery为 null，testOnBorrow、testOnReturn、testWhileIdle都不起其作用。 -->
+		<property name="validationQuery" value="SELECT 1 FROM DUAL" />
+	</bean>
+
+	<!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactoryMain" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceMain" />
+		<!-- 自动扫描mapping.xml文件 -->
+		<property name="mapperLocations">
+			<list>
+				<value>classpath:mybatisMain/*.xml</value>
+				<value>classpath:mybatisPower/*.xml</value>
+				<value>classpath:mybatisBasic/*.xml</value>
+			</list>
+		</property>
+		<!-- 
+		<property name="configLocation" value="classpath:mybatis.xml"></property>
+		 -->
+	</bean>
+
+	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage"
+			value="com.chinay.back.daomain,com.chinay.frame.power.dao,com.chinay.frame.basic.dao" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryMain"></property>
+	</bean>
+
+	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManagerMain"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceMain" />
+	</bean>
+
+	<tx:advice id="txAdviceMain" transaction-manager="transactionManagerMain">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" rollback-for="Exception" />
+			<tx:method name="find*" propagation="SUPPORTS" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config proxy-target-class="false">
+		<aop:advisor id="managerTxMain" advice-ref="txAdviceMain"
+			pointcut="execution(* *..servicemain..*ServiceImpl.*(..))" order="0" />
+		<aop:advisor id="managerTxPower" advice-ref="txAdviceMain"
+			pointcut="execution(* *..servicepower..*ServiceImpl.*(..))" order="0" />
+		<aop:advisor id="managerTxBasic" advice-ref="txAdviceMain"
+			pointcut="execution(* *..servicebasic..*ServiceImpl.*(..))" order="0" />
+	</aop:config>
+</beans>

@@ -1,4 +1,4 @@
-package com.bestnews.controller;
+package com.me.news.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.bestnews.model.User;
+import com.me.news.model.User;
 
 @Controller
 @RequestMapping("/user")
@@ -41,5 +41,8 @@ public class UserController {
 		users.add(user);
 		return "redirect:/user/list";
 	}
-	
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	public String login(String userName, String password){
+		return "redirect:/user/list";
+	}
 }
